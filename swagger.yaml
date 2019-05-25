@@ -44,6 +44,10 @@ paths:
             type: 'array'
             items:
               type: 'object'
+              required:
+              - 'device_id'
+              - 'serial'
+              - 'nickname'
               properties:
                 device_id:
                   type: 'string'
