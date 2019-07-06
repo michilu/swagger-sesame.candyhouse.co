@@ -39,26 +39,11 @@ paths:
       summary: 'Get Sesame list'
       responses:
         200:
-          description: ''
+          description: 'OK'
           schema:
             type: 'array'
             items:
-              type: 'object'
-              required:
-              - 'device_id'
-              - 'serial'
-              - 'nickname'
-              properties:
-                device_id:
-                  type: 'string'
-                  format: 'uuid'
-                  description: 'Sesame unique ID'
-                serial:
-                  type: 'string'
-                  description: 'Sesame serial'
-                nickname:
-                  type: 'string'
-                  description: 'Sesame nickname'
+              $ref: '#/definitions/GetSesameResponse'
   /sesame/{device_id}:
     parameters:
     - name: 'device_id'
@@ -71,24 +56,9 @@ paths:
       summary: 'Get Sesame status'
       responses:
         200:
-          description: ''
+          description: 'OK'
           schema:
-            type: 'object'
-            required:
-            - 'locked'
-            - 'battery'
-            - 'responsive'
-            properties:
-              locked:
-                type: 'boolean'
-                description: 'Sesame is locked or not'
-              battery:
-                type: 'integer'
-                format: 'int32'
-                description: 'Sesame battery status'
-              responsive:
-                type: 'boolean'
-                description: 'Sesame is responsive now or not'
+            $ref: '#/definitions/GetSesameStatusResponse'
     post:
       summary: 'Control Sesame'
       description: ''
@@ -100,28 +70,12 @@ paths:
           **NOTE**: Frequent use of the sync command will reduce Sesame’s battery life.
         required: true
         schema:
-          type: 'object'
-          required:
-          - 'command'
-          properties:
-            command:
-              type: 'string'
-              enum:
-              - 'lock'
-              - 'unlock'
-              - 'sync'
+          $ref: '#/definitions/ControlSesameRequest'
       responses:
         200:
-          description: ''
+          description: 'OK'
           schema:
-            type: 'object'
-            required:
-            - 'task_id'
-            properties:
-              task_id:
-                type: 'string'
-                format: 'uuid'
-                description: 'Task ID which can be used to query execution result.'
+            $ref: '#/definitions/ControlSesameResponse'
   /action-result:
     parameters:
     - name: 'task_id'
@@ -135,20 +89,77 @@ paths:
       description: ''
       responses:
         200:
-          description: ''
+          description: 'OK'
           schema:
-            type: 'object'
-            required:
-            - 'status'
-            properties:
-              status:
-                type: 'string'
-                description: 'Can be "processing" or "terminated".'
-              successful:
-                type: 'boolean'
-                description: |
-                  This parameter only appears when the status is terminated.
-                  Indicates whether the execution was successful or not.
-              error:
-                type: 'string'
-                description: 'Indicates the reason execution failed.'
+            $ref: '#/definitions/QueryExecutionResultResponse'
+definitions:
+  GetSesameResponse:
+    type: 'object'
+    required:
+    - 'device_id'
+    - 'serial'
+    - 'nickname'
+    properties:
+      device_id:
+        type: 'string'
+        format: 'uuid'
+        description: 'Sesame unique ID'
+      serial:
+        type: 'string'
+        description: 'Sesame serial'
+      nickname:
+        type: 'string'
+        description: 'Sesame nickname'
+  ControlSesameRequest:
+    type: 'object'
+    required:
+    - 'command'
+    properties:
+      command:
+        type: 'string'
+        enum:
+        - 'lock'
+        - 'unlock'
+        - 'sync'
+  GetSesameStatusResponse:
+    type: 'object'
+    required:
+    - 'locked'
+    - 'battery'
+    - 'responsive'
+    properties:
+      locked:
+        type: 'boolean'
+        description: 'Sesame is locked or not'
+      battery:
+        type: 'integer'
+        format: 'int32'
+        description: 'Sesame battery status'
+      responsive:
+        type: 'boolean'
+        description: 'Sesame is responsive now or not'
+  ControlSesameResponse:
+    type: 'object'
+    required:
+    - 'task_id'
+    properties:
+      task_id:
+        type: 'string'
+        format: 'uuid'
+        description: 'Task ID which can be used to query execution result.'
+  QueryExecutionResultResponse:
+    type: 'object'
+    required:
+    - 'status'
+    properties:
+      status:
+        type: 'string'
+        description: 'Can be `processing` or `terminated`.'
+      successful:
+        type: 'boolean'
+        description: |
+          This parameter only appears when the status is terminated.
+          Indicates whether the execution was successful or not.
+      error:
+        type: 'string'
+        description: 'Indicates the reason execution failed.'
