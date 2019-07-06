@@ -140,13 +140,10 @@ paths:
             type: 'object'
             required:
             - 'status'
-            - 'successful'
             properties:
               status:
                 type: 'string'
-                enum:
-                - 'processing'
-                - 'terminated'
+                description: 'Can be "processing" or "terminated".'
               successful:
                 type: 'boolean'
                 description: |
