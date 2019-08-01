@@ -76,6 +76,10 @@ paths:
           description: 'OK'
           schema:
             $ref: '#/definitions/ControlSesameResponse'
+        400:
+          description: 'Bad Request'
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
   /action-result:
     parameters:
     - name: 'task_id'
@@ -163,3 +167,17 @@ definitions:
       error:
         type: 'string'
         description: 'Indicates the reason execution failed.'
+  BadRequestResponse:
+    type: 'object'
+    required:
+    - 'error'
+    properties:
+      error:
+        type: 'string'
+        description: |
+          `BAD_PARAMS` Your request paremeters are invalid
+          `CLOUD_INTEGRATION_NOT_ENABLED` Please enable cloud integration in Sesame app under Sesame > Change Settings.
+          `LOW_BATTERY` Your device cannot be operated because its batteries are low.
+          `DEVICE_IS_BUSY` Your device cannot be operated because it is occupied by other requests.
+          `DEVICE_IS_BUSY :seconds` Your device cannot be operated because the device is occupied by other requests.
+          The :seconds is an integer indicating the max duration you have to wait until you can send the next request.
